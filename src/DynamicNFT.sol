@@ -38,7 +38,8 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
 
     // Storage
     mapping(uint256 => NFTState) public nftStates;
-    
+    mapping(address => uint256[]) public userTokens;
+
     // Events
     event TokenMinted(uint256 indexed tokenId, address indexed to);
     event MetadataUpdated(uint256 indexed tokenId, string newMetadata);
