@@ -44,5 +44,5 @@ contract DynamicNFT is ERC721, Ownable {
 
     // Configuration
     uint256 public constant MAX_SUPPLY = 10000;
-    
+    uint256 public mintPrice = 0.01 ether;
 }
