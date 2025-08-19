@@ -35,4 +35,8 @@ contract DynamicNFT is ERC721, Ownable {
         uint256 humidity;
         uint256 timestamp;
     }
+
+    // Storage
+    mapping(uint256 => TokenData) public tokenData;
+    
 }
