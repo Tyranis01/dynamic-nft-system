@@ -17,4 +17,15 @@ contract DynamicNFT is ERC721, Ownable {
     event TokenMinted(uint256 indexed tokenId, address indexed to);
     event MetadataUpdated(uint256 indexed tokenId, string newMetadata);
     event UserActionPerformed(uint256 indexed tokenId, address indexed user, string action);
+
+    // Structs
+    struct TokenData {
+        uint256 mintTime;
+        uint256 lastUpdate;
+        uint256 interactionCount;
+        string currentWeather;
+        uint256 temperature; // In Celsius * 100 (e.g., 2550 = 25.5°C)
+        string season;
+        address lastInteractor;
+    }
 }
