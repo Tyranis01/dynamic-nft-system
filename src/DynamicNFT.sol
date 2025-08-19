@@ -9,5 +9,6 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract DynamicNFT is ERC721, Ownable {
     using Counters for Counters.Counter;
+    using Strings for uint256;
 
 }
