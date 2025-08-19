@@ -20,6 +20,9 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
+    // Core interfaces
+    IDataOracle public weatherOracle;
+    
     // Events
     event TokenMinted(uint256 indexed tokenId, address indexed to);
     event MetadataUpdated(uint256 indexed tokenId, string newMetadata);
