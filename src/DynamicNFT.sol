@@ -50,17 +50,6 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     uint256 public constant UPDATE_INTERVAL = 1 hours;
     uint256 public constant MAX_SUPPLY = 10000;
 
-    // Structs
-    struct TokenData {
-        uint256 mintTime;
-        uint256 lastUpdate;
-        uint256 interactionCount;
-        string currentWeather;
-        uint256 temperature; // In Celsius * 100 (e.g., 2550 = 25.5°C)
-        string season;
-        address lastInteractor;
-    }
-
     struct WeatherData {
         string condition; // "sunny", "rainy", "cloudy", "snowy"
         uint256 temperature;
