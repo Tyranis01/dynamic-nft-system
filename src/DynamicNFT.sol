@@ -11,4 +11,6 @@ contract DynamicNFT is ERC721, Ownable {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
+    Counters.Counter private _tokenIds;
+
 }
