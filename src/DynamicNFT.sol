@@ -50,11 +50,6 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     uint256 public constant UPDATE_INTERVAL = 1 hours;
     uint256 public constant MAX_SUPPLY = 10000;
 
-    // Events
-    event TokenMinted(uint256 indexed tokenId, address indexed to);
-    event MetadataUpdated(uint256 indexed tokenId, string newMetadata);
-    event UserActionPerformed(uint256 indexed tokenId, address indexed user, string action);
-
     // Structs
     struct TokenData {
         uint256 mintTime;
