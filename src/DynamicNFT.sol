@@ -14,7 +14,7 @@ import "./interfaces/IMetadataRenderer.sol";
  * @title DynamicNFT
  * @dev NFT contract that changes metadata based on external data sources
  */
-contract DynamicNFT is ERC721, Ownable {
+contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
