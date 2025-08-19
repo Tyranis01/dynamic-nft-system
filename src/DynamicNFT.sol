@@ -50,10 +50,6 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     uint256 public constant UPDATE_INTERVAL = 1 hours;
     uint256 public constant MAX_SUPPLY = 10000;
 
-    // Storage
-    mapping(uint256 => TokenData) public tokenData;
-    mapping(address => bool) public authorizedOracles;
-
     WeatherData public currentWeather;
 
     // Configuration
