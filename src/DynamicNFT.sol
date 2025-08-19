@@ -7,4 +7,4 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract DynamicNFT {}
+contract DynamicNFT is ERC721, Ownable {}
