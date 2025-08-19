@@ -50,10 +50,6 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     uint256 public constant UPDATE_INTERVAL = 1 hours;
     uint256 public constant MAX_SUPPLY = 10000;
 
-    // Configuration
-    uint256 public constant MAX_SUPPLY = 10000;
-    uint256 public mintPrice = 0.01 ether;
-
     // Metadata renderer contract
     address public metadataRenderer;
 }
