@@ -2,50 +2,52 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "./interfaces/IDataOracle.sol";
+import "./interfaces/IMetadataRenderer.sol";
 
-contract DynamicNFT is ERC721, Ownable {
+/**
+ * @title DynamicNFT
+ * @dev NFT contract that changes metadata based on external data sources
+ */
+contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
-    Counters.Counter private _tokenIds;
+    Counters.Counter private _tokenIdCounter;
 
-    // Events
-    event TokenMinted(uint256 indexed tokenId, address indexed to);
-    event MetadataUpdated(uint256 indexed tokenId, string newMetadata);
-    event UserActionPerformed(uint256 indexed tokenId, address indexed user, string action);
+    // Core interfaces
+    IDataOracle public weatherOracle;
+    IDataOracle public timeOracle;
+    IMetadataRenderer public metadataRenderer;
 
-    // Structs
-    struct TokenData {
-        uint256 mintTime;
-        uint256 lastUpdate;
-        uint256 interactionCount;
+    // NFT State Management
+    struct NFTState {
+        uint256 lastWeatherUpdate;
+        uint256 lastTimeUpdate;
+        uint256 userActionCount;
         string currentWeather;
-        uint256 temperature; // In Celsius * 100 (e.g., 2550 = 25.5°C)
-        string season;
-        address lastInteractor;
-    }
-
-    struct WeatherData {
-        string condition; // "sunny", "rainy", "cloudy", "snowy"
-        uint256 temperature;
-        uint256 humidity;
-        uint256 timestamp;
+        string currentTimeOfDay;
+        address owner;
+        uint256 createdAt;
     }
 
     // Storage
-    mapping(uint256 => TokenData) public tokenData;
-    mapping(address => bool) public authorizedOracles;
+    mapping(uint256 => NFTState) public nftStates;
+    mapping(address => uint256[]) public userTokens;
 
-    WeatherData public currentWeather;
+    // Events
+    event NFTMinted(uint256 indexed tokenId, address indexed owner);
+    event NFTUpdated(uint256 indexed tokenId, string updateType, string newValue);
+    event OracleUpdated(address indexed oracle, string oracleType);
+    event UserAction(uint256 indexed tokenId, address indexed user, string action);
 
-    // Configuration
+    // Constants
+    uint256 public constant UPDATE_INTERVAL = 1 hours;
     uint256 public constant MAX_SUPPLY = 10000;
-    uint256 public mintPrice = 0.01 ether;
 
-    // Metadata renderer contract
-    address public metadataRenderer;
 }
