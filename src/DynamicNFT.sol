@@ -28,4 +28,11 @@ contract DynamicNFT is ERC721, Ownable {
         string season;
         address lastInteractor;
     }
+
+    struct WeatherData {
+        string condition; // "sunny", "rainy", "cloudy", "snowy"
+        uint256 temperature;
+        uint256 humidity;
+        uint256 timestamp;
+    }
 }
