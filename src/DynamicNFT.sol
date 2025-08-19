@@ -42,4 +42,7 @@ contract DynamicNFT is ERC721, Ownable {
 
     WeatherData public currentWeather;
 
+    // Configuration
+    uint256 public constant MAX_SUPPLY = 10000;
+    
 }
