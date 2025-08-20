@@ -135,6 +135,9 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
         emit NFTUpdated(tokenId, "userAction", Strings.toString(nftStates[tokenId].userActionCount));
     }
 
+    /**
+     * @dev Get current time of day based on block timestamp
+     */
     function _getCurrentTimeOfDay() internal view returns (string memory) {
         uint256 hour = (block.timestamp / 3600) % 24;
         
