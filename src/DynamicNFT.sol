@@ -146,4 +146,10 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
         if (hour >= 18 && hour < 22) return "evening";
         return "night";
     }
+
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+        require(_exists(tokenId), "Token does not exist");
+        
+        return metadataRenderer.renderMetadata(tokenId, nftStates[tokenId]);
+    }
 }
