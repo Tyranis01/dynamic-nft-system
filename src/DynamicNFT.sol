@@ -194,4 +194,9 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     function totalSupply() external view returns (uint256) {
         return _tokenIdCounter.current();
     }
+
+    // Required overrides
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+        super._burn(tokenId);
+    }
 }
