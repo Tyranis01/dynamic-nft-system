@@ -188,6 +188,9 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
         metadataRenderer = IMetadataRenderer(_newRenderer);
     }
 
+    /**
+     * @dev Get total supply
+     */
     function totalSupply() external view returns (uint256) {
         return _tokenIdCounter.current();
     }
