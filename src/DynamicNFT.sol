@@ -170,4 +170,9 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
         require(_exists(tokenId), "Token does not exist");
         return nftStates[tokenId];
     }
+
+    function updateWeatherOracle(address _newOracle) external onlyOwner {
+        weatherOracle = IDataOracle(_newOracle);
+        emit OracleUpdated(_newOracle, "weather");
+    }
 }
