@@ -60,6 +60,9 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
         metadataRenderer = IMetadataRenderer(_metadataRenderer);
     }
 
+    /**
+     * @dev Mint a new dynamic NFT
+     */
     function mint(address to) public onlyOwner returns (uint256) {
         require(_tokenIdCounter.current() < MAX_SUPPLY, "Max supply reached");
         
