@@ -147,6 +147,9 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
         return "night";
     }
 
+    /**
+     * @dev Override tokenURI to return dynamic metadata
+     */
     function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         require(_exists(tokenId), "Token does not exist");
         
