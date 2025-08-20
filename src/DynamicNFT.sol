@@ -59,4 +59,29 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
         timeOracle = IDataOracle(_timeOracle);
         metadataRenderer = IMetadataRenderer(_metadataRenderer);
     }
+
+    function mint(address to) public onlyOwner returns (uint256) {
+        require(_tokenIdCounter.current() < MAX_SUPPLY, "Max supply reached");
+        
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        
+        _safeMint(to, tokenId);
+        
+        // Initialize NFT state
+        nftStates[tokenId] = NFTState({
+            lastWeatherUpdate: block.timestamp,
+            lastTimeUpdate: block.timestamp,
+            userActionCount: 0,
+            currentWeather: "sunny",
+            currentTimeOfDay: _getCurrentTimeOfDay(),
+            owner: to,
+            createdAt: block.timestamp
+        });
+        
+        userTokens[to].push(tokenId);
+        
+        emit NFTMinted(tokenId, to);
+        return tokenId;
+    }
 }
