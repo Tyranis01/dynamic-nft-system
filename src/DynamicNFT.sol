@@ -104,4 +104,18 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
         
         emit NFTUpdated(tokenId, "weather", newWeather);
     }
+
+    function updateTimeOfDay(uint256 tokenId) external {
+        require(_exists(tokenId), "Token does not exist");
+        require(
+            block.timestamp >= nftStates[tokenId].lastTimeUpdate + UPDATE_INTERVAL,
+            "Too early to update"
+        );
+        
+        string memory newTimeOfDay = _getCurrentTimeOfDay();
+        nftStates[tokenId].currentTimeOfDay = newTimeOfDay;
+        nftStates[tokenId].lastTimeUpdate = block.timestamp;
+        
+        emit NFTUpdated(tokenId, "timeOfDay", newTimeOfDay);
+    }
 }
