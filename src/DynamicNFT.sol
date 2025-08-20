@@ -50,4 +50,13 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     uint256 public constant UPDATE_INTERVAL = 1 hours;
     uint256 public constant MAX_SUPPLY = 10000;
 
+    constructor(
+        address _weatherOracle,
+        address _timeOracle,
+        address _metadataRenderer
+    ) ERC721("Dynamic Weather NFT", "DYNFT") {
+        weatherOracle = IDataOracle(_weatherOracle);
+        timeOracle = IDataOracle(_timeOracle);
+        metadataRenderer = IMetadataRenderer(_metadataRenderer);
+    }
 }
