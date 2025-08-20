@@ -183,4 +183,8 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
         timeOracle = IDataOracle(_newOracle);
         emit OracleUpdated(_newOracle, "time");
     }
+
+    function updateMetadataRenderer(address _newRenderer) external onlyOwner {
+        metadataRenderer = IMetadataRenderer(_newRenderer);
+    }
 }
