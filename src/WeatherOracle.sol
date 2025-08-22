@@ -12,6 +12,13 @@ import "./interfaces/IDataOracle.sol";
  */
 contract WeatherOracle is IDataOracle, Ownable {
 
- // Current weather data
- WeatherData public currentWeather;
+    struct WeatherData {
+        string condition;
+        int256 temperature;
+        uint256 timestamp;
+        bool isValid;
+    }
+
+    // Current weather data
+    WeatherData public currentWeather;
 }
