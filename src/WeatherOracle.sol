@@ -34,4 +34,7 @@ contract WeatherOracle is IDataOracle, Ownable {
         "snowy",
         "foggy"
     ];
+
+    event WeatherUpdated(string condition, int256 temperature, uint256 timestamp);
+
 }
