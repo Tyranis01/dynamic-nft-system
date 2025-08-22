@@ -35,6 +35,7 @@ contract WeatherOracle is IDataOracle, Ownable {
         "foggy"
     ];
 
+    // Events
     event WeatherUpdated(string condition, int256 temperature, uint256 timestamp);
     event UpdaterAuthorized(address indexed updater, bool authorized);
 
