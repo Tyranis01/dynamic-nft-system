@@ -11,5 +11,7 @@ import "./interfaces/IDataOracle.sol";
  * This is a mock implementation - in production you'd integrate with real weather APIs
  */
 contract WeatherOracle is IDataOracle, Ownable {
+
+ // Current weather data
  WeatherData public currentWeather;
 }
