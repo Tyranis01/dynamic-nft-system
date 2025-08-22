@@ -21,4 +21,7 @@ contract WeatherOracle is IDataOracle, Ownable {
 
     // Current weather data
     WeatherData public currentWeather;
+
+    mapping(address => bool) public authorizedUpdaters;
+
 }
