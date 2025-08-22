@@ -25,6 +25,7 @@ contract WeatherOracle is IDataOracle, Ownable {
     // Authorized updaters (could be Chainlink nodes, API services, etc.)
     mapping(address => bool) public authorizedUpdaters;
 
+    // Weather conditions mapping
     string[] public weatherConditions = [
         "sunny",
         "cloudy", 
