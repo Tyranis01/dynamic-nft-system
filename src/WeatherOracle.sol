@@ -10,4 +10,6 @@ import "./interfaces/IDataOracle.sol";
  * @dev Oracle contract that provides weather data for dynamic NFTs
  * This is a mock implementation - in production you'd integrate with real weather APIs
  */
-contract WeatherOracle is IDataOracle, Ownable {}
+contract WeatherOracle is IDataOracle, Ownable {
+ WeatherData public currentWeather;
+}
