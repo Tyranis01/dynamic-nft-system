@@ -60,6 +60,9 @@ contract WeatherOracle is IDataOracle, Ownable {
         authorizedUpdaters[msg.sender] = true;
     }
 
+    /**
+     * @dev Update weather data
+     */
     function updateWeather(string calldata condition, int256 temperature) external onlyAuthorizedUpdater {
         require(bytes(condition).length > 0, "Invalid condition");
         require(_isValidWeatherCondition(condition), "Unknown weather condition");
