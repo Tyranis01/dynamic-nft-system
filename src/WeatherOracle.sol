@@ -77,6 +77,9 @@ contract WeatherOracle is IDataOracle, Ownable {
         emit WeatherUpdated(condition, temperature, block.timestamp);
     }
 
+    /**
+     * @dev Get current weather data (implements IDataOracle)
+     */
     function getData() external view override returns (string memory) {
         require(currentWeather.isValid, "No valid weather data");
         require(
