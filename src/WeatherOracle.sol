@@ -39,4 +39,6 @@ contract WeatherOracle is IDataOracle, Ownable {
     event WeatherUpdated(string condition, int256 temperature, uint256 timestamp);
     event UpdaterAuthorized(address indexed updater, bool authorized);
 
+    uint256 public constant STALE_DATA_THRESHOLD = 4 hours;
+
 }
