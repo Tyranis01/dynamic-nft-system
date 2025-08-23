@@ -42,4 +42,8 @@ contract WeatherOracle is IDataOracle, Ownable {
     // Constants
     uint256 public constant STALE_DATA_THRESHOLD = 4 hours;
 
+    modifier onlyAuthorizedUpdater() {
+        require(authorizedUpdaters[msg.sender] || msg.sender == owner(), "Not authorized updater");
+        _;
+    }
 }
