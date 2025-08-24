@@ -97,6 +97,9 @@ contract WeatherOracle is IDataOracle, Ownable {
         return currentWeather;
     }
 
+    /**
+     * @dev Generate pseudo-random weather (for demo purposes)
+     */
     function generateRandomWeather() external onlyAuthorizedUpdater {
         uint256 randomIndex = uint256(keccak256(abi.encodePacked(
             block.timestamp,
