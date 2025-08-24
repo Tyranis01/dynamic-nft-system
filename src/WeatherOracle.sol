@@ -89,4 +89,8 @@ contract WeatherOracle is IDataOracle, Ownable {
         
         return currentWeather.condition;
     }
+
+    function getDetailedWeatherData() external view returns (WeatherData memory) {
+        return currentWeather;
+    }
 }
