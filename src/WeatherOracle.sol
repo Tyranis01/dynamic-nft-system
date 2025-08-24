@@ -144,4 +144,8 @@ contract WeatherOracle is IDataOracle, Ownable {
         authorizedUpdaters[updater] = authorized;
         emit UpdaterAuthorized(updater, authorized);
     }
+
+    function addWeatherCondition(string calldata condition) external onlyOwner {
+        weatherConditions.push(condition);
+    }
 }
