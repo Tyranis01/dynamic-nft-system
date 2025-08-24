@@ -124,4 +124,13 @@ contract WeatherOracle is IDataOracle, Ownable {
         
         emit WeatherUpdated(condition, temperature, block.timestamp);
     }
+
+    function _isValidWeatherCondition(string memory condition) internal view returns (bool) {
+        for (uint i = 0; i < weatherConditions.length; i++) {
+            if (keccak256(abi.encodePacked(weatherConditions[i])) == keccak256(abi.encodePacked(condition))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
