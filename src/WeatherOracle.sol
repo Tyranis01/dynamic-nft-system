@@ -89,4 +89,66 @@ contract WeatherOracle is IDataOracle, Ownable {
         
         return currentWeather.condition;
     }
+
+    /**
+     * @dev Get detailed weather data
+     */
+    function getDetailedWeatherData() external view returns (WeatherData memory) {
+        return currentWeather;
+    }
+
+    /**
+     * @dev Generate pseudo-random weather (for demo purposes)
+     */
+    function generateRandomWeather() external onlyAuthorizedUpdater {
+        uint256 randomIndex = uint256(keccak256(abi.encodePacked(
+            block.timestamp,
+            block.difficulty,
+            msg.sender
+        ))) % weatherConditions.length;
+        
+        string memory condition = weatherConditions[randomIndex];
+        
+        // Generate random temperature between -10 and 35 Celsius
+        int256 temperature = int256((uint256(keccak256(abi.encodePacked(
+            block.timestamp + 1,
+            block.difficulty
+        ))) % 46)) - 10;
+        
+        currentWeather = WeatherData({
+            condition: condition,
+            temperature: temperature,
+            timestamp: block.timestamp,
+            isValid: true
+        });
+        
+        emit WeatherUpdated(condition, temperature, block.timestamp);
+    }
+
+    /**
+     * @dev Check if weather condition is valid
+     */
+    function _isValidWeatherCondition(string memory condition) internal view returns (bool) {
+        for (uint i = 0; i < weatherConditions.length; i++) {
+            if (keccak256(abi.encodePacked(weatherConditions[i])) == keccak256(abi.encodePacked(condition))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+   /**
+     * @dev Authorize/unauthorize updaters
+     */
+    function setAuthorizedUpdater(address updater, bool authorized) external onlyOwner {
+        authorizedUpdaters[updater] = authorized;
+        emit UpdaterAuthorized(updater, authorized);
+    }
+
+    /**
+     * @dev Add new weather condition
+     */
+    function addWeatherCondition(string calldata condition) external onlyOwner {
+        weatherConditions.push(condition);
+    }
 }
