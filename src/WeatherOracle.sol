@@ -151,4 +151,33 @@ contract WeatherOracle is IDataOracle, Ownable {
     function addWeatherCondition(string calldata condition) external onlyOwner {
         weatherConditions.push(condition);
     }
+
+    /**
+     * @dev Check if data is stale
+     */
+    function isDataStale() external view returns (bool) {
+        return block.timestamp > currentWeather.timestamp + STALE_DATA_THRESHOLD;
+    }
+
+    /**
+     * @dev Get last update timestamp
+     */
+    function getLastUpdateTimestamp() external view returns (uint256) {
+        return currentWeather.timestamp;
+    }
+
+    /**
+     * @dev Get weather condition by index
+     */
+    function getWeatherCondition(uint256 index) external view returns (string memory) {
+        require(index < weatherConditions.length, "Index out of bounds");
+        return weatherConditions[index];
+    }
+
+    /**
+     * @dev Get total weather conditions count
+     */
+    function getWeatherConditionsCount() external view returns (uint256) {
+        return weatherConditions.length;
+    }
 }
