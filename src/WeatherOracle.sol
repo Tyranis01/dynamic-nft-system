@@ -151,4 +151,8 @@ contract WeatherOracle is IDataOracle, Ownable {
     function addWeatherCondition(string calldata condition) external onlyOwner {
         weatherConditions.push(condition);
     }
+
+    function isDataStale() external view returns (bool) {
+        return block.timestamp > currentWeather.timestamp + STALE_DATA_THRESHOLD;
+    }
 }
