@@ -174,6 +174,9 @@ contract WeatherOracle is IDataOracle, Ownable {
         return weatherConditions[index];
     }
 
+    /**
+     * @dev Get total weather conditions count
+     */
     function getWeatherConditionsCount() external view returns (uint256) {
         return weatherConditions.length;
     }
