@@ -165,4 +165,9 @@ contract WeatherOracle is IDataOracle, Ownable {
     function getLastUpdateTimestamp() external view returns (uint256) {
         return currentWeather.timestamp;
     }
+
+    function getWeatherCondition(uint256 index) external view returns (string memory) {
+        require(index < weatherConditions.length, "Index out of bounds");
+        return weatherConditions[index];
+    }
 }
