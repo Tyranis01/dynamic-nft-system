@@ -158,4 +158,8 @@ contract WeatherOracle is IDataOracle, Ownable {
     function isDataStale() external view returns (bool) {
         return block.timestamp > currentWeather.timestamp + STALE_DATA_THRESHOLD;
     }
+
+    function getLastUpdateTimestamp() external view returns (uint256) {
+        return currentWeather.timestamp;
+    }
 }
