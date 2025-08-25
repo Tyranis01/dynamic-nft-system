@@ -152,6 +152,9 @@ contract WeatherOracle is IDataOracle, Ownable {
         weatherConditions.push(condition);
     }
 
+    /**
+     * @dev Check if data is stale
+     */
     function isDataStale() external view returns (bool) {
         return block.timestamp > currentWeather.timestamp + STALE_DATA_THRESHOLD;
     }
