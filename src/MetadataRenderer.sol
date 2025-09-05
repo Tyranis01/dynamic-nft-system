@@ -18,4 +18,6 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
     mapping(string => string) public timeColors;
     mapping(string => string) public weatherBackgrounds;
 
+    // Base SVG template parts
+
 }
