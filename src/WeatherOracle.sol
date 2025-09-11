@@ -11,7 +11,6 @@ import "./interfaces/IDataOracle.sol";
  * This is a mock implementation - in production you'd integrate with real weather APIs
  */
 contract WeatherOracle is IDataOracle, Ownable {
-
     struct WeatherData {
         string condition;
         int256 temperature;
@@ -26,14 +25,7 @@ contract WeatherOracle is IDataOracle, Ownable {
     mapping(address => bool) public authorizedUpdaters;
 
     // Weather conditions mapping
-    string[] public weatherConditions = [
-        "sunny",
-        "cloudy", 
-        "rainy",
-        "stormy",
-        "snowy",
-        "foggy"
-    ];
+    string[] public weatherConditions = ["sunny", "cloudy", "rainy", "stormy", "snowy", "foggy"];
 
     // Events
     event WeatherUpdated(string condition, int256 temperature, uint256 timestamp);
@@ -49,13 +41,8 @@ contract WeatherOracle is IDataOracle, Ownable {
 
     constructor() {
         // Initialize with default weather
-        currentWeather = WeatherData({
-            condition: "sunny",
-            temperature: 22,
-            timestamp: block.timestamp,
-            isValid: true
-        });
-        
+        currentWeather = WeatherData({condition: "sunny", temperature: 22, timestamp: block.timestamp, isValid: true});
+
         // Authorize owner as updater
         authorizedUpdaters[msg.sender] = true;
     }
@@ -66,14 +53,10 @@ contract WeatherOracle is IDataOracle, Ownable {
     function updateWeather(string calldata condition, int256 temperature) external onlyAuthorizedUpdater {
         require(bytes(condition).length > 0, "Invalid condition");
         require(_isValidWeatherCondition(condition), "Unknown weather condition");
-        
-        currentWeather = WeatherData({
-            condition: condition,
-            temperature: temperature,
-            timestamp: block.timestamp,
-            isValid: true
-        });
-        
+
+        currentWeather =
+            WeatherData({condition: condition, temperature: temperature, timestamp: block.timestamp, isValid: true});
+
         emit WeatherUpdated(condition, temperature, block.timestamp);
     }
 
@@ -82,11 +65,8 @@ contract WeatherOracle is IDataOracle, Ownable {
      */
     function getData() external view override returns (string memory) {
         require(currentWeather.isValid, "No valid weather data");
-        require(
-            block.timestamp <= currentWeather.timestamp + STALE_DATA_THRESHOLD,
-            "Weather data is stale"
-        );
-        
+        require(block.timestamp <= currentWeather.timestamp + STALE_DATA_THRESHOLD, "Weather data is stale");
+
         return currentWeather.condition;
     }
 
@@ -101,27 +81,18 @@ contract WeatherOracle is IDataOracle, Ownable {
      * @dev Generate pseudo-random weather (for demo purposes)
      */
     function generateRandomWeather() external onlyAuthorizedUpdater {
-        uint256 randomIndex = uint256(keccak256(abi.encodePacked(
-            block.timestamp,
-            block.difficulty,
-            msg.sender
-        ))) % weatherConditions.length;
-        
+        uint256 randomIndex = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, msg.sender)))
+            % weatherConditions.length;
+
         string memory condition = weatherConditions[randomIndex];
-        
+
         // Generate random temperature between -10 and 35 Celsius
-        int256 temperature = int256((uint256(keccak256(abi.encodePacked(
-            block.timestamp + 1,
-            block.difficulty
-        ))) % 46)) - 10;
-        
-        currentWeather = WeatherData({
-            condition: condition,
-            temperature: temperature,
-            timestamp: block.timestamp,
-            isValid: true
-        });
-        
+        int256 temperature =
+            int256((uint256(keccak256(abi.encodePacked(block.timestamp + 1, block.difficulty))) % 46)) - 10;
+
+        currentWeather =
+            WeatherData({condition: condition, temperature: temperature, timestamp: block.timestamp, isValid: true});
+
         emit WeatherUpdated(condition, temperature, block.timestamp);
     }
 
@@ -129,7 +100,7 @@ contract WeatherOracle is IDataOracle, Ownable {
      * @dev Check if weather condition is valid
      */
     function _isValidWeatherCondition(string memory condition) internal view returns (bool) {
-        for (uint i = 0; i < weatherConditions.length; i++) {
+        for (uint256 i = 0; i < weatherConditions.length; i++) {
             if (keccak256(abi.encodePacked(weatherConditions[i])) == keccak256(abi.encodePacked(condition))) {
                 return true;
             }
@@ -137,7 +108,7 @@ contract WeatherOracle is IDataOracle, Ownable {
         return false;
     }
 
-   /**
+    /**
      * @dev Authorize/unauthorize updaters
      */
     function setAuthorizedUpdater(address updater, bool authorized) external onlyOwner {
