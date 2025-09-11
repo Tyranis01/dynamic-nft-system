@@ -24,6 +24,6 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
     string public constant SVG_FOOTER = "</svg>";
 
     constructor() Ownable(msg.sender) {
-        //_initializeColorSchemes();
+        _initializeColorSchemes();
     }
 }
