@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import "./interfaces/IDataOracle.sol";
 
 /**
@@ -39,7 +39,7 @@ contract WeatherOracle is IDataOracle, Ownable {
         _;
     }
 
-    constructor() {
+    constructor() Ownable(msg.sender) {
         // Initialize with default weather
         currentWeather = WeatherData({condition: "sunny", temperature: 22, timestamp: block.timestamp, isValid: true});
 
@@ -63,7 +63,7 @@ contract WeatherOracle is IDataOracle, Ownable {
     /**
      * @dev Get current weather data (implements IDataOracle)
      */
-    function getData() external view override returns (string memory) {
+    function getData() external view returns (string memory) {
         require(currentWeather.isValid, "No valid weather data");
         require(block.timestamp <= currentWeather.timestamp + STALE_DATA_THRESHOLD, "Weather data is stale");
 

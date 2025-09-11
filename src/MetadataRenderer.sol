@@ -23,7 +23,7 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">';
     string public constant SVG_FOOTER = "</svg>";
 
-    constructor() {
-        _initializeColorSchemes();
+    constructor() Ownable(msg.sender) {
+        //_initializeColorSchemes();
     }
 }
