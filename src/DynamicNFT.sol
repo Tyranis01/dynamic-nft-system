@@ -2,9 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./interfaces/IDataOracle.sol";
@@ -14,11 +12,10 @@ import "./interfaces/IMetadataRenderer.sol";
  * @title DynamicNFT
  * @dev NFT contract that changes metadata based on external data sources
  */
-contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
-    using Counters for Counters.Counter;
+contract DynamicNFT is ERC721, Ownable {
     using Strings for uint256;
 
-    Counters.Counter private _tokenIdCounter;
+    uint256 private _tokenIdCounter;
 
     // Core interfaces
     IDataOracle public weatherOracle;
@@ -50,11 +47,10 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     uint256 public constant UPDATE_INTERVAL = 1 hours;
     uint256 public constant MAX_SUPPLY = 10000;
 
-    constructor(
-        address _weatherOracle,
-        address _timeOracle,
-        address _metadataRenderer
-    ) ERC721("Dynamic Weather NFT", "DYNFT") {
+    constructor(address _weatherOracle, address _timeOracle, address _metadataRenderer)
+        ERC721("Dynamic Weather NFT", "DYNFT")
+        Ownable(msg.sender)
+    {
         weatherOracle = IDataOracle(_weatherOracle);
         timeOracle = IDataOracle(_timeOracle);
         metadataRenderer = IMetadataRenderer(_metadataRenderer);
@@ -64,13 +60,12 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
      * @dev Mint a new dynamic NFT
      */
     function mint(address to) public onlyOwner returns (uint256) {
-        require(_tokenIdCounter.current() < MAX_SUPPLY, "Max supply reached");
-        
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        
+        require(_tokenIdCounter < MAX_SUPPLY, "Max supply reached");
+        uint256 tokenId = _tokenIdCounter;
+        _tokenIdCounter++;
+
         _safeMint(to, tokenId);
-        
+
         // Initialize NFT state
         nftStates[tokenId] = NFTState({
             lastWeatherUpdate: block.timestamp,
@@ -81,9 +76,9 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
             owner: to,
             createdAt: block.timestamp
         });
-        
+
         userTokens[to].push(tokenId);
-        
+
         emit NFTMinted(tokenId, to);
         return tokenId;
     }
@@ -92,16 +87,13 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
      * @dev Update NFT based on weather data
      */
     function updateWeather(uint256 tokenId) external {
-        require(_exists(tokenId), "Token does not exist");
-        require(
-            block.timestamp >= nftStates[tokenId].lastWeatherUpdate + UPDATE_INTERVAL,
-            "Too early to update"
-        );
-        
+        require(_ownerOf(tokenId) != address(0), "Token does not exist");
+        require(block.timestamp >= nftStates[tokenId].lastWeatherUpdate + UPDATE_INTERVAL, "Too early to update");
+
         string memory newWeather = weatherOracle.getData();
         nftStates[tokenId].currentWeather = newWeather;
         nftStates[tokenId].lastWeatherUpdate = block.timestamp;
-        
+
         emit NFTUpdated(tokenId, "weather", newWeather);
     }
 
@@ -109,16 +101,13 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
      * @dev Update NFT based on time of day
      */
     function updateTimeOfDay(uint256 tokenId) external {
-        require(_exists(tokenId), "Token does not exist");
-        require(
-            block.timestamp >= nftStates[tokenId].lastTimeUpdate + UPDATE_INTERVAL,
-            "Too early to update"
-        );
-        
+        require(_ownerOf(tokenId) != address(0), "Token does not exist");
+        require(block.timestamp >= nftStates[tokenId].lastTimeUpdate + UPDATE_INTERVAL, "Too early to update");
+
         string memory newTimeOfDay = _getCurrentTimeOfDay();
         nftStates[tokenId].currentTimeOfDay = newTimeOfDay;
         nftStates[tokenId].lastTimeUpdate = block.timestamp;
-        
+
         emit NFTUpdated(tokenId, "timeOfDay", newTimeOfDay);
     }
 
@@ -126,11 +115,11 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
      * @dev Record user action that affects NFT
      */
     function performUserAction(uint256 tokenId, string calldata action) external {
-        require(_exists(tokenId), "Token does not exist");
+        require(_ownerOf(tokenId) != address(0), "Token does not exist");
         require(ownerOf(tokenId) == msg.sender, "Not token owner");
-        
+
         nftStates[tokenId].userActionCount++;
-        
+
         emit UserAction(tokenId, msg.sender, action);
         emit NFTUpdated(tokenId, "userAction", Strings.toString(nftStates[tokenId].userActionCount));
     }
@@ -140,7 +129,7 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
      */
     function _getCurrentTimeOfDay() internal view returns (string memory) {
         uint256 hour = (block.timestamp / 3600) % 24;
-        
+
         if (hour >= 6 && hour < 12) return "morning";
         if (hour >= 12 && hour < 18) return "afternoon";
         if (hour >= 18 && hour < 22) return "evening";
@@ -150,9 +139,8 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
     /**
      * @dev Override tokenURI to return dynamic metadata
      */
-    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
-        require(_exists(tokenId), "Token does not exist");
-        
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        require(_ownerOf(tokenId) != address(0), "Token does not exist");
         return metadataRenderer.renderMetadata(tokenId, nftStates[tokenId]);
     }
 
@@ -167,7 +155,7 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
      * @dev Get NFT state for a token
      */
     function getNFTState(uint256 tokenId) external view returns (NFTState memory) {
-        require(_exists(tokenId), "Token does not exist");
+        require(_ownerOf(tokenId) != address(0), "Token does not exist");
         return nftStates[tokenId];
     }
 
@@ -192,15 +180,15 @@ contract DynamicNFT is ERC721, ERC721URIStorage, Ownable {
      * @dev Get total supply
      */
     function totalSupply() external view returns (uint256) {
-        return _tokenIdCounter.current();
+        return _tokenIdCounter;
     }
 
     // Required overrides
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+    function _burn(uint256 tokenId) internal virtual override(ERC721) {
         super._burn(tokenId);
     }
 
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 }
