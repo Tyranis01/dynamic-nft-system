@@ -11,4 +11,6 @@ interface IMetadataRenderer {
         address owner;
         uint256 createdAt;
     }
+
+    function renderMetadata(uint256 tokenId, NFTState memory state) external view returns (string memory);
 }
