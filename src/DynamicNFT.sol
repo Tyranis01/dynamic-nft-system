@@ -184,7 +184,7 @@ contract DynamicNFT is ERC721, Ownable {
     }
 
     // Required overrides
-    function _burn(uint256 tokenId) internal override(ERC721) {
+    function _burn(uint256 tokenId) internal virtual override(ERC721) {
         super._burn(tokenId);
     }
 

@@ -1,18 +1,6 @@
 {
-  "lib/chainlink": {
-    "tag": {
-      "name": "v2.28.0",
-      "rev": "6289ad570fcb2b4255871d397e85daa00bb945c0"
-    }
-  },
   "lib/chainlink-brownie-contracts": {
     "rev": "67887b84d3add02a25ef4145fc014e2f549509da"
-  },
-  "lib/chainlink-evm": {
-    "tag": {
-      "name": "v0.3.3",
-      "rev": "793106cd598da8b2762958880300787b0b361fa1"
-    }
   },
   "lib/forge-std": {
     "rev": "8bbcf6e3f8f62f419e5429a0bd89331c85c37824"
