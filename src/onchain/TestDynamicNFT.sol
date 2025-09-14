@@ -60,7 +60,7 @@ contract TestDynamicNFT is ERC721 {
      */
     function updateWeather(uint256 tokenId) external {
         require(_ownerOf(tokenId) != address(0), "Token does not exist");
-        
+
         string memory newWeather = weatherOptions[_pseudoRandom(block.timestamp, "weather") % weatherOptions.length];
         nftStates[tokenId].currentWeather = newWeather;
 
@@ -72,7 +72,7 @@ contract TestDynamicNFT is ERC721 {
      */
     function updateTimeOfDay(uint256 tokenId) external {
         require(_ownerOf(tokenId) != address(0), "Token does not exist");
-        
+
         string memory newTimeOfDay = timeOptions[_pseudoRandom(block.timestamp, "time") % timeOptions.length];
         nftStates[tokenId].currentTimeOfDay = newTimeOfDay;
 
@@ -102,9 +102,9 @@ contract TestDynamicNFT is ERC721 {
      */
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_ownerOf(tokenId) != address(0), "Token does not exist");
-        
+
         NFTState memory state = nftStates[tokenId];
-        
+
         // Create simple JSON metadata
         string memory json = string(
             abi.encodePacked(
@@ -117,7 +117,7 @@ contract TestDynamicNFT is ERC721 {
                 state.currentTimeOfDay,
                 '"}, {"trait_type": "User Actions", "value": ',
                 state.userActionCount.toString(),
-                '}]}'
+                "}]}"
             )
         );
 
@@ -153,9 +153,11 @@ contract TestDynamicNFT is ERC721 {
             let resultPtr := add(result, 32)
 
             for { let i := 0 } lt(i, mload(data)) { i := add(i, 3) } {
-                let input := add(add(shl(16, byte(0, mload(add(add(data, i), 32)))), 
-                    shl(8, byte(1, mload(add(add(data, i), 32))))), 
-                    byte(2, mload(add(add(data, i), 32))))
+                let input :=
+                    add(
+                        add(shl(16, byte(0, mload(add(add(data, i), 32)))), shl(8, byte(1, mload(add(add(data, i), 32))))),
+                        byte(2, mload(add(add(data, i), 32)))
+                    )
 
                 mstore8(resultPtr, mload(add(tablePtr, and(shr(18, input), 0x3F))))
                 resultPtr := add(resultPtr, 1)
