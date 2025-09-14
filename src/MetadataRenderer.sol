@@ -105,4 +105,20 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
             SVG_FOOTER
         ));
     }
+
+    /**
+     * @dev Generate background gradient
+     */
+    function _getBackgroundGradient(string memory weather, string memory timeOfDay) internal view returns (string memory) {
+        string memory weatherGradient = weatherBackgrounds[weather];
+        string memory timeColor = timeColors[timeOfDay];
+        
+        return string(abi.encodePacked(
+            '<defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">',
+            '<stop offset="0%" style="stop-color:', timeColor, ';stop-opacity:0.7" />',
+            '<stop offset="100%" style="stop-color:', weatherColors[weather], ';stop-opacity:0.9" />',
+            '</linearGradient></defs>',
+            '<rect width="400" height="400" fill="url(#bg)" />'
+        ));
+    }
 }
