@@ -141,7 +141,17 @@ contract DynamicNFT is ERC721, Ownable {
      */
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_ownerOf(tokenId) != address(0), "Token does not exist");
-        return metadataRenderer.renderMetadata(tokenId, nftStates[tokenId]);
+        NFTState memory state = nftStates[tokenId];
+        IMetadataRenderer.NFTState memory rendererState = IMetadataRenderer.NFTState({
+            lastWeatherUpdate: state.lastWeatherUpdate,
+            lastTimeUpdate: state.lastTimeUpdate,
+            userActionCount: state.userActionCount,
+            currentWeather: state.currentWeather,
+            currentTimeOfDay: state.currentTimeOfDay,
+            owner: state.owner,
+            createdAt: state.createdAt
+        });
+        return metadataRenderer.renderMetadata(tokenId, rendererState);
     }
 
     /**
@@ -181,11 +191,6 @@ contract DynamicNFT is ERC721, Ownable {
      */
     function totalSupply() external view returns (uint256) {
         return _tokenIdCounter;
-    }
-
-    // Required overrides
-    function _burn(uint256 tokenId) internal virtual override(ERC721) {
-        super._burn(tokenId);
     }
 
     function supportsInterface(bytes4 interfaceId) public view override(ERC721) returns (bool) {
