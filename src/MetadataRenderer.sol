@@ -53,4 +53,32 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
         weatherBackgrounds["snowy"] = "linear-gradient(45deg, #F0F8FF, #E6E6FA)";
         weatherBackgrounds["foggy"] = "linear-gradient(45deg, #D3D3D3, #C0C0C0)";
     }
+
+    /**
+     * @dev Render complete metadata for a token (implements IMetadataRenderer)
+     */
+    function renderMetadata(uint256 tokenId, IMetadataRenderer.NFTState memory state)
+        external
+        view
+        override
+        returns (string memory)
+    {
+        string memory svg = _generateSVG(tokenId, state);
+
+        string memory attributes = _generateAttributes(state);
+
+        string memory metadata = string(
+            abi.encodePacked(
+                '{"name": "Dynamic NFT #',
+                tokenId.toString(),
+                '", "description": "A dynamic NFT that changes based on weather, time, and user interactions", "image": "data:image/svg+xml;base64,',
+                Base64.encode(bytes(svg)),
+                '", "attributes": [',
+                attributes,
+                "]}"
+            )
+        );
+
+        return string(abi.encodePacked("data:application/json;base64,", Base64.encode(bytes(metadata))));
+    }
 }
