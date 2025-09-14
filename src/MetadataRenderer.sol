@@ -81,4 +81,28 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
 
         return string(abi.encodePacked("data:application/json;base64,", Base64.encode(bytes(metadata))));
     }
+
+    /**
+     * @dev Generate SVG image based on NFT state
+     */
+    function _generateSVG(
+        uint256 tokenId,
+        IMetadataRenderer.NFTState memory state
+    ) internal view returns (string memory) {
+        string memory background = _getBackgroundGradient(state.currentWeather, state.currentTimeOfDay);
+        string memory weatherElement = _getWeatherElement(state.currentWeather);
+        string memory timeElement = _getTimeElement(state.currentTimeOfDay);
+        string memory actionElement = _getActionElement(state.userActionCount);
+        string memory tokenText = _getTokenText(tokenId);
+        
+        return string(abi.encodePacked(
+            SVG_HEADER,
+            background,
+            weatherElement,
+            timeElement,
+            actionElement,
+            tokenText,
+            SVG_FOOTER
+        ));
+    }
 }
