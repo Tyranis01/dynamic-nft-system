@@ -155,4 +155,42 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
             return '<rect x="300" y="50" width="80" height="20" fill="#191970" opacity="0.7" rx="10" /><text x="340" y="65" text-anchor="middle" fill="white" font-size="12">Night</text><circle cx="320" cy="100" r="3" fill="white" /><circle cx="350" cy="110" r="2" fill="white" /><circle cx="360" cy="90" r="2" fill="white" />';
         }
     }
+
+       /**
+     * @dev Generate user action visual element
+     */
+    function _getActionElement(uint256 actionCount) internal pure returns (string memory) {
+        if (actionCount == 0) {
+            return '<circle cx="50" cy="350" r="20" fill="gray" opacity="0.5" />';
+        } else if (actionCount <= 5) {
+            return '<circle cx="50" cy="350" r="20" fill="green" /><text x="50" y="355" text-anchor="middle" fill="white" font-size="12">Active</text>';
+        } else if (actionCount <= 10) {
+            return '<circle cx="50" cy="350" r="25" fill="orange" /><text x="50" y="355" text-anchor="middle" fill="white" font-size="10">Very Active</text>';
+        } else {
+            return '<circle cx="50" cy="350" r="30" fill="red" /><text x="50" y="355" text-anchor="middle" fill="white" font-size="8">Super Active</text>';
+        }
+    }
+    
+    /**
+     * @dev Generate token ID text
+     */
+    function _getTokenText(uint256 tokenId) internal pure returns (string memory) {
+        return string(abi.encodePacked(
+            '<text x="200" y="380" text-anchor="middle" fill="white" font-size="14" font-weight="bold">#',
+            tokenId.toString(),
+            '</text>'
+        ));
+    }
+    
+    /**
+     * @dev Generate JSON attributes array
+     */
+    function _generateAttributes(IMetadataRenderer.NFTState memory state) internal view returns (string memory) {
+        return string(abi.encodePacked(
+            '{"trait_type": "Weather", "value": "', state.currentWeather, '"},',
+            '{"trait_type": "Time of Day", "value": "', state.currentTimeOfDay, '"},',
+            '{"trait_type": "User Actions", "value": ', state.userActionCount.toString(), ', "display_type": "number"},',
+            '{"trait_type": "Age (Hours)", "value": ', ((block.timestamp - state.createdAt) / 3600).toString(), ', "display_type": "number"}'
+        ));
+    }
 }
