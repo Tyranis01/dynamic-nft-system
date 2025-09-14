@@ -140,4 +140,19 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
             return '<ellipse cx="100" cy="80" rx="40" ry="30" fill="#D3D3D3" opacity="0.8" />';
         }
     }
+
+    /**
+     * @dev Generate time-specific visual element
+     */
+    function _getTimeElement(string memory timeOfDay) internal pure returns (string memory) {
+        if (keccak256(abi.encodePacked(timeOfDay)) == keccak256(abi.encodePacked("morning"))) {
+            return '<rect x="300" y="50" width="80" height="20" fill="#FFA07A" opacity="0.7" rx="10" /><text x="340" y="65" text-anchor="middle" fill="white" font-size="12">Morning</text>';
+        } else if (keccak256(abi.encodePacked(timeOfDay)) == keccak256(abi.encodePacked("afternoon"))) {
+            return '<rect x="300" y="50" width="80" height="20" fill="#87CEFA" opacity="0.7" rx="10" /><text x="340" y="65" text-anchor="middle" fill="white" font-size="12">Afternoon</text>';
+        } else if (keccak256(abi.encodePacked(timeOfDay)) == keccak256(abi.encodePacked("evening"))) {
+            return '<rect x="300" y="50" width="80" height="20" fill="#DDA0DD" opacity="0.7" rx="10" /><text x="340" y="65" text-anchor="middle" fill="white" font-size="12">Evening</text>';
+        } else {
+            return '<rect x="300" y="50" width="80" height="20" fill="#191970" opacity="0.7" rx="10" /><text x="340" y="65" text-anchor="middle" fill="white" font-size="12">Night</text><circle cx="320" cy="100" r="3" fill="white" /><circle cx="350" cy="110" r="2" fill="white" /><circle cx="360" cy="90" r="2" fill="white" />';
+        }
+    }
 }
