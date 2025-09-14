@@ -121,4 +121,23 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
             '<rect width="400" height="400" fill="url(#bg)" />'
         ));
     }
+
+    /**
+     * @dev Generate weather-specific visual element
+     */
+    function _getWeatherElement(string memory weather) internal pure returns (string memory) {
+        if (keccak256(abi.encodePacked(weather)) == keccak256(abi.encodePacked("sunny"))) {
+            return '<circle cx="100" cy="100" r="40" fill="#FFD700" /><g stroke="#FFA500" stroke-width="3" stroke-linecap="round"><line x1="60" y1="60" x2="70" y2="70" /><line x1="140" y1="60" x2="130" y2="70" /><line x1="100" y1="40" x2="100" y2="30" /><line x1="100" y1="170" x2="100" y2="160" /></g>';
+        } else if (keccak256(abi.encodePacked(weather)) == keccak256(abi.encodePacked("rainy"))) {
+            return '<ellipse cx="100" cy="80" rx="30" ry="20" fill="#87CEEB" /><g stroke="#4682B4" stroke-width="2" stroke-linecap="round"><line x1="80" y1="120" x2="85" y2="140" /><line x1="100" y1="120" x2="105" y2="140" /><line x1="120" y1="120" x2="125" y2="140" /></g>';
+        } else if (keccak256(abi.encodePacked(weather)) == keccak256(abi.encodePacked("snowy"))) {
+            return '<g fill="#F0F8FF" stroke="#E6E6FA" stroke-width="1"><polygon points="100,70 110,90 90,90" /><polygon points="120,100 130,120 110,120" /><polygon points="80,110 90,130 70,130" /></g>';
+        } else if (keccak256(abi.encodePacked(weather)) == keccak256(abi.encodePacked("cloudy"))) {
+            return '<ellipse cx="90" cy="80" rx="25" ry="15" fill="#87CEEB" /><ellipse cx="110" cy="85" rx="30" ry="20" fill="#B0C4DE" />';
+        } else if (keccak256(abi.encodePacked(weather)) == keccak256(abi.encodePacked("stormy"))) {
+            return '<ellipse cx="100" cy="70" rx="35" ry="25" fill="#2F4F4F" /><polygon points="100,110 85,140 95,140 80,170 110,140 100,140 115,120" fill="#FFD700" />';
+        } else {
+            return '<ellipse cx="100" cy="80" rx="40" ry="30" fill="#D3D3D3" opacity="0.8" />';
+        }
+    }
 }
