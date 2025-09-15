@@ -229,4 +229,8 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
     function updateWeatherColor(string calldata weather, string calldata color) external onlyOwner {
         weatherColors[weather] = color;
     }
+
+    function updateTimeColor(string calldata timeOfDay, string calldata color) external onlyOwner {
+        timeColors[timeOfDay] = color;
+    }
 }
