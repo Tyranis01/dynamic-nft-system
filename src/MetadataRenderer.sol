@@ -222,4 +222,19 @@ contract MetadataRenderer is IMetadataRenderer, Ownable {
             )
         );
     }
+
+    /**
+     * @dev Update color scheme (only owner)
+     */
+    function updateWeatherColor(string calldata weather, string calldata color) external onlyOwner {
+        weatherColors[weather] = color;
+    }
+
+    function updateTimeColor(string calldata timeOfDay, string calldata color) external onlyOwner {
+        timeColors[timeOfDay] = color;
+    }
+
+    function updateWeatherBackground(string calldata weather, string calldata background) external onlyOwner {
+        weatherBackgrounds[weather] = background;
+    }
 }
